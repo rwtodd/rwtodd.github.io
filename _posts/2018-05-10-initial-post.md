@@ -2,6 +2,7 @@
 layout: post
 title: "Initial Post"
 date: 2018-05-10
+categories: jekyll update
 ---
 
 I have created a new blog.  Content will be added soon.
