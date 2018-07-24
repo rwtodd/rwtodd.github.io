@@ -46,8 +46,8 @@ starting from the horrible guess: 1.0...
 ;;  2.127304396708496d-4 0.0d0 0.0d0 0.0d0 0.0d0 0.0d0 0.0d0 0.0d0 0.0d0)
 ```
 
-So even after a single refinement, the square of our guess was within 4 
-of our target.
+So after 11 refinements of our initial guess, the square of our 
+guess was within 0.0003 of our target.
 
 Finally, we can define a helper function to refine our guess until a tolerance
 is met, and print the answer and the number of steps:
@@ -81,7 +81,15 @@ Looks roughly logarithmic compared to NUM...
 (mapcar #'log '(16 256 65536 4294967296))
 ;; => (2.7725887 5.5451775 11.090355 22.18071)
 ```
-Yep, similar!  I like how easy it is to just play
+Yep, similar!  
+
+Sussman mentions in the video that
+this method is equivalent to Newton's method for finding zeros.
+How so?  Well, if you set up an equation: f(g) = g*g - num, then
+when f(g) is 0, g will be the square root of num.  From there,
+it is easy to derive Heron's formula from g - f(g)/f'(g). 
+
+I like how easy it is to just play
 around with these things in lisp.
 
 [1]: https://www.youtube.com/watch?v=fAY0_pesZ6s&index=34&list=WL
