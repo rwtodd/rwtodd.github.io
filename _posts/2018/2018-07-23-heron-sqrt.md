@@ -26,7 +26,7 @@ guesses, each getting closer to the desired square root:
 So, for instance, we can take the first 20 guesses at sqrt(40149),
 starting from the horrible guess: 1.0...
 
-```
+```common-lisp
 (lg--> (heron 40149 1) (lg-take 20) (lg-to-list))
 ;; => (1 20075.0d0 10038.4999750934d0 5021.249738510471d0 2514.622778350662d0
 ;;  1265.2944950999367d0 648.5127239886488d0 355.21103606229434d0
