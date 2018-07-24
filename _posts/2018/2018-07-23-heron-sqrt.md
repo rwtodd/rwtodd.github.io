@@ -69,7 +69,7 @@ Question: how fast does the number of required guesses grow compared to the size
 
 ```common-lisp
 (loop :for x = 2 :then (* x x) 
-      :for result = (multiple-value-bind (_ c) (do-heron x) c) 
+      :for result = (nth-value 1 (do-heron x)) 
       :collect (list x result) 
       :while (< result 20))
 ;; => ((2 3) (4 4) (16 6) (256 8) (65536 13) (4294967296 21))
