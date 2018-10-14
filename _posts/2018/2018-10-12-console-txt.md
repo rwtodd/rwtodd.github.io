@@ -28,10 +28,12 @@ double-checking the results), I wrote a short powershell script:
 # The file is always written relative to the current
 # directory.
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$fname, $rest = $args
+param([string] $fname)
 
 $fullpath = Join-Path (Get-Location) $fname
-$bytes = @( $rest | ForEach-Object { [Convert]::ToUint32($_,16) } )
+$bytes = foreach ($xx in $args) {
+    [Convert]::ToUint32($xx,16)
+}
 
 [IO.File]::WriteAllBytes($fullpath, $bytes)
 ~~~~~
