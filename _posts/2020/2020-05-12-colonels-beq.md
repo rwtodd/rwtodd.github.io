@@ -50,7 +50,7 @@ and the logic resources generally line up one-to-one.  Trying that for
   - Logic 414 has the copy protection text
   - Logic 409 has the "have you seen the intro yet" question
 
-![text strings]{/assets/2020/01-414-texts.png}
+![text strings](/assets/2020/01-414-texts.png)
 
 So, I know I need to find a way to get to script 409, and script 414 has
 the code that stops me. Alright, then how do we get to 414 in the first place?
@@ -209,16 +209,16 @@ method.  So, let's attack `localproc_01bf` and hope for the best.
 Recall, I want to make it a no-op.  Here's the dissassemly for the procedure:
 
 ~~~~~
-(procedure proc\_01bf
+(procedure proc_01bf
   01bf:76               push0 
-  01c0:40 ffe5 00        call proc\_01a9 0 
+  01c0:40 ffe5 00        call proc_01a9 0 
 
   01c4:39 04            pushi 4 // $4 x
-  01c6:38 019e          pushi 19e // $19e sel\_414
+  01c6:38 019e          pushi 19e // $19e sel_414
   01c9:76               push0 
   01ca:39 1e            pushi 1e // $1e mode
   01cc:78               push1 
-  01cd:47 ff 00 08      calle ff procedure\_0000 8 //  
+  01cd:47 ff 00 08      calle ff procedure_0000 8 //  
 
   01d1:35 01              ldi 1 
   01d3:a1 04              sag  
@@ -230,7 +230,7 @@ Recall, I want to make it a no-op.  Here's the dissassemly for the procedure:
 the first instruction (instead of the `0x76`)!  
 Using a hex-editor, I adjust the code.
 
-![hex editor screenshot]{/assets/2020/01-hex-edit-script-414.jpg}
+![hex editor screenshot](/assets/2020/01-hex-edit-script-414.jpg)
 
 No luck!  It doesn't throw me out when I make a guess, but the cursor switches
 from a magnifying glass to a normal cursor, and I'm stuck there.  Clicking
@@ -242,23 +242,23 @@ and see what happens.  Here's the dissassembly for the start of the
 `#handleEvent` method): 
 
 ~~~~~
-(method (handleEvent) // method\_02d0
+(method (handleEvent) // method_02d0
   02d0:3f 01             link 1 // (var $1)
   02d2:83 68              lal local104 
   02d4:18                 not 
-  02d5:30 0286            bnt code\_055e 
+  02d5:30 0286            bnt code_055e 
   02d8:83 66              lal local102 
-  02da:30 008d            bnt code\_036a 
+  02da:30 008d            bnt code_036a 
   02dd:39 22            pushi 22 // $22 type
   02df:76               push0 
   02e0:87 01              lap param1 
 ~~~~~
 
-So, I'll change the code for `bnt code\_055e` to `not not not`, since
+So, I'll change the code for `bnt code_055e` to `not not not`, since
 I don't know an SCI opcode for an actual no-op.  So, `30 86 02` to 
 `18 18 18` ...
 
-![hex editor screenshot]{/assets/2020/01-hex-edit-script-414-pt2.jpg}
+![hex editor screenshot](/assets/2020/01-hex-edit-script-414-pt2.jpg)
 
 
 ... and it kinda works.  You have to press `Enter` after each guess, but
@@ -272,7 +272,7 @@ the fingerprint, puts the glass on the upper left choice, and makes a
 mysterious call to `identify #state` and `self #cue`.
 
 ~~~~~
-((== (pEvent message?) KEY\_RETURN)
+((== (pEvent message?) KEY_RETURN)
 	(Logo dispose:)
 	(Glass posn: 162 140 setMotion: 0 stopUpd:)
 	(Finger show: stopUpd:)
@@ -308,7 +308,7 @@ The dissassembly for those calls is as follows:
 So, I put that code into the failure function (modified slightly to fit
 in the space I have)... 
 
-![hex editor screenshot]{/assets/2020/01-hex-edit-script-414-pt3.jpg}
+![hex editor screenshot](/assets/2020/01-hex-edit-script-414-pt3.jpg)
 
 ... and the program crashes
 now.  I was concerned about sending messages from outside the object, and
@@ -346,17 +346,17 @@ two calls are.  Luckily, they are both 5 bytes:
   03ab:76               push0 
   03ac:54 04             self 4 
 
-  03ae:32 0005            jmp code\_03b6 
+  03ae:32 0005            jmp code_03b6 
 
         code_03b1
   03b1:76               push0 
-  03b2:40 fe09 00        call proc\_01bf 0 
+  03b2:40 fe09 00        call proc_01bf 0 
 ~~~~~
 
 So, let's change them so that `#cue` is called on both branches...
 That's three identical changes for keyboard, joystick, and mouse actions:
 
-![hex editor screenshot]{/assets/2020/01-hex-edit-script-414-pt4.jpg}
+![hex editor screenshot](/assets/2020/01-hex-edit-script-414-pt4.jpg)
 
 ... and it works perfectly!  Now, no matter which answer I pick, the
 game thinks I'm correct.  And, as a bonus, I only have to alter the
