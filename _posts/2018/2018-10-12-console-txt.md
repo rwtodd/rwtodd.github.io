@@ -156,7 +156,7 @@ BOM to the UTF-8 version?  It's a simple matter of putting 0xEF,
 ~~~~~~ powershell
 > $plusbom  = @( 0xef, 0xbb, 0xbf  ) + 
 >> @( Get-Content -AsByteStream .\pscore.txt ) | 
->> %{ [Convert]::ToString($_,16) }
+>> %{ [Convert]::ToString($\_,16) }
 > write-bin.ps1 utf8bom.txt $plusbom
 ~~~~~~
 
@@ -172,7 +172,7 @@ PS C:\Users\richa\tst> get-content .\utf8bom.txt
 otherwise goes to its default encoding.  As far as I can tell, the
 default encodings are:
 
-  - **Core** exptects to see UTF-8 w/o BOM everywhere, unless a BOM
+  - **Core** expects to see UTF-8 w/o BOM everywhere, unless a BOM
     tells it otherwise.
   - **Windows** outputs UTF-16 w/BOM, and when reading text that doesn't
     have a BOM it assumes it is latin-1 codepage 1252.
