@@ -10,20 +10,25 @@ it can be annoying looking up the fingerprint just to get the game
 started.  So, I wanted to patch my legal copy of the game to make the
 check easier.
 
-I've done a fair amount of investigation into AGI internals, but not SCI,
-so this also makes a fun opportunity to learn a little about it.
+The game runs under the SCI interpeter.  I've done a fair amount of
+investigation into their previous engine, called AGI, 
+so this also makes a fun opportunity to learn a little about what's changed.  
+Fortunately, there are ready-made tools for investigations like these; I
+don't need to make my own just to get started.
+
+At the bottom of this post you will find a link to the patch I made.
 
 ## Tools
 
-I have my own AGI decompiler, but not for SCI.  So, I downloaded and
-compiled the SCICompanion to save myself some time.  It's a nice 
+I have my own AGI decompiler, but nothing for SCI.  So, I downloaded and
+compiled the [SCICompanion](http://scicompanion.com/).  It's a nice 
 program, and I will definitely reference it if I ever make my own
 SCI resource dumper.
 
-Anyway, I decompile all the scripts, which come out in s-expressions. 
-Nice!
+Anyway, to start with, I decompiled all the scripts, which come out in 
+s-expressions.  Nice!
 
-## Getting Our Bearings
+## Getting My Bearings
 
 I know from AGI games that logic script 0 is very important (it always runs
  no matter what room you are in, so it has globally important stuff like the
@@ -50,7 +55,7 @@ and the logic resources generally line up one-to-one.  Trying that for
   - Logic 414 has the copy protection text
   - Logic 409 has the "have you seen the intro yet" question
 
-![text strings](/assets/2020/01-414-texts.png)
+![text strings](/assets/2020/01/414-texts.png)
 
 So, I know I need to find a way to get to script 409, and script 414 has
 the code that stops me. Alright, then how do we get to 414 in the first place?
@@ -65,46 +70,46 @@ up and then jumps to room 99:
 
 ~~~~~
 (instance CB1 of Game
-	(properties)
-	
-	(method (init)
-        < ... elided setup stuff ... >
+  (properties)
   
-		(if (GameIsRestarting)
-			(= global16 1)
-			(SetCursor 997 0 320 200)
-			(TheMenuBar draw: state: 1 hide:)
-		)
-		(self newRoom: 99)
-	)
+  (method (init)
+    < ... elided setup stuff ... >
+  
+    (if (GameIsRestarting)
+      (= global16 1)
+      (SetCursor 997 0 320 200)
+      (TheMenuBar draw: state: 1 hide:)
+    )
+    (self newRoom: 99)
+  )
     ...
-)	
+) 
 ~~~~~
 
 In script 99, it's not hard at all to see our first possibility for a patch.
+Here's the code I'm talking about:
+
+~~~~~
+(if
+  (and
+    (not global16)
+    (not (StrCmp {zz} (+ global28 7)))
+  )
+  (self setScript: (ScriptID 409 0))
+else
+  (global2 newRoom:
+  (switch global16
+    (1 44)
+    (else  414)
+  ))
+)
+~~~~~
+
 Remember that 409 is the "do you want to see the intro?" script.  It's clear
 here that if `global16` is not set, and if `global28 + 7` == `zz`, then we 
 will jump right to 409.  Otherwise it goes to either the copy protection room, 
 or room 44 (the starting room with Lillian and Laura, so I guess that's what
 happens on a restart). 
-
-Here's the code I'm talking about:
-
-~~~~~
-(if
-	(and
-		(not global16)
-		(not (StrCmp {zz} (+ global28 7)))
-	)
-	(self setScript: (ScriptID 409 0))
-else
-	(global2 newRoom:
-	(switch global16
-		(1 44)
-		(else  414)
-	))
-)
-~~~~~
 
 That `zz` check seems like debug code to me, to help developers
 skip the copy protection.  Ok, so in Script 0, let's see how those
@@ -124,11 +129,11 @@ goes right to the intro question.
 ## Method Two
 
 While I got what I wanted, I quickly realized a different approach would
-please me more.  The problem with method 1 is: you don't get to see the
+please me more.  The problem with Method One is: you don't get to see the
 copy protection screen.  That means you don't hear the music, or see the
 graphics.  It's just not the same.  What I'd really like is: I get the
-fingerprint question, and then the game logic thinks I'm right no
-matter what.
+fingerprint question, and then the game lets me guess until I hit the
+right name.
 
 So, I need to see how script 414 works.  In retrospect, I probably should
 have started with that anyway.
@@ -141,17 +146,17 @@ in the file:
 ~~~~
 (instance identify of Script
  (method (changeState newState &tmp [temp0 25])
-	(switch (= state newState)
+  (switch (= state newState)
         < ... ELIDED ... >
-		(6
-			(= local104 1)
-			(= local102 1)
-			(localproc_01a9)
-			(proc255_0 414 10 30 1)
-			(SetCursor 997 1 300 0)
-			(self setScript: (ScriptID 409 0))
-		)
-	)
+    (6
+      (= local104 1)
+      (= local102 1)
+      (localproc_01a9)
+      (proc255_0 414 10 30 1)
+      (SetCursor 997 1 300 0)
+      (self setScript: (ScriptID 409 0))
+    )
+  )
  )
 )
 ~~~~~
@@ -179,18 +184,18 @@ them.  For example, here is what appears to be a mouse button event handler:
 
 ~~~~~~
 (evMOUSEBUTTON
-	(= local104 1)
-	(= local102 1)
-	(if
-		(==
-			(= local4 (localproc_0150 (pEvent x?) (pEvent y?)))
-			[local53 (+ (* local1 6) local0)]
-		)
-		(self cue:)
-	else
-		(localproc_01bf)
-	)
-	(pEvent claimed: 1)
+  (= local104 1)
+  (= local102 1)
+  (if
+    (==
+      (= local4 (localproc_0150 (pEvent x?) (pEvent y?)))
+      [local53 (+ (* local1 6) local0)]
+    )
+    (self cue:)
+  else
+    (localproc_01bf)
+  )
+  (pEvent claimed: 1)
 )
 ~~~~~~
 
@@ -210,19 +215,19 @@ Recall, I want to make it a no-op.  Here's the dissassemly for the procedure:
 
 ~~~~~
 (procedure proc_01bf
-  01bf:76               push0 
-  01c0:40 ffe5 00        call proc_01a9 0 
+  01bf:76           push0 
+  01c0:40 ffe5 00   call proc_01a9 0 
 
-  01c4:39 04            pushi 4 // $4 x
-  01c6:38 019e          pushi 19e // $19e sel_414
-  01c9:76               push0 
-  01ca:39 1e            pushi 1e // $1e mode
-  01cc:78               push1 
-  01cd:47 ff 00 08      calle ff procedure_0000 8 //  
+  01c4:39 04        pushi 4 // $4 x
+  01c6:38 019e      pushi 19e // $19e sel_414
+  01c9:76           push0 
+  01ca:39 1e        pushi 1e // $1e mode
+  01cc:78           push1 
+  01cd:47 ff 00 08  calle ff procedure_0000 8 //  
 
-  01d1:35 01              ldi 1 
-  01d3:a1 04              sag  
-  01d5:48                 ret 
+  01d1:35 01        ldi 1 
+  01d3:a1 04        sag  
+  01d5:48           ret 
 )
 ~~~~~
 
@@ -230,7 +235,7 @@ Recall, I want to make it a no-op.  Here's the dissassemly for the procedure:
 the first instruction (instead of the `0x76`)!  
 Using a hex-editor, I adjust the code.
 
-![hex editor screenshot](/assets/2020/01-hex-edit-script-414.jpg)
+![hex editor screenshot](/assets/2020/01/hex-edit-script-414.jpg)
 
 No luck!  It doesn't throw me out when I make a guess, but the cursor switches
 from a magnifying glass to a normal cursor, and I'm stuck there.  Clicking
@@ -243,22 +248,22 @@ and see what happens.  Here's the dissassembly for the start of the
 
 ~~~~~
 (method (handleEvent) // method_02d0
-  02d0:3f 01             link 1 // (var $1)
-  02d2:83 68              lal local104 
-  02d4:18                 not 
-  02d5:30 0286            bnt code_055e 
-  02d8:83 66              lal local102 
-  02da:30 008d            bnt code_036a 
-  02dd:39 22            pushi 22 // $22 type
-  02df:76               push0 
-  02e0:87 01              lap param1 
+  02d0:3f 01        link 1 // (var $1)
+  02d2:83 68        lal local104 
+  02d4:18           not 
+  02d5:30 0286      bnt code_055e 
+  02d8:83 66        lal local102 
+  02da:30 008d      bnt code_036a 
+  02dd:39 22        pushi 22 // $22 type
+  02df:76           push0 
+  02e0:87 01        lap param1 
 ~~~~~
 
 So, I'll change the code for `bnt code_055e` to `not not not`, since
 I don't know an SCI opcode for an actual no-op.  So, `30 86 02` to 
 `18 18 18` ...
 
-![hex editor screenshot](/assets/2020/01-hex-edit-script-414-pt2.jpg)
+![hex editor screenshot](/assets/2020/01/hex-edit-script-414-pt2.jpg)
 
 
 ... and it kinda works.  You have to press `Enter` after each guess, but
@@ -273,11 +278,11 @@ mysterious call to `identify #state` and `self #cue`.
 
 ~~~~~
 ((== (pEvent message?) KEY_RETURN)
-	(Logo dispose:)
-	(Glass posn: 162 140 setMotion: 0 stopUpd:)
-	(Finger show: stopUpd:)
-	(identify state: 4 seconds: 0 cycles: 0)
-	(self cue:)
+  (Logo dispose:)
+  (Glass posn: 162 140 setMotion: 0 stopUpd:)
+  (Finger show: stopUpd:)
+  (identify state: 4 seconds: 0 cycles: 0)
+  (self cue:)
 )
 ~~~~~
 
@@ -288,27 +293,27 @@ failure routine, rather than just returning.
 The dissassembly for those calls is as follows:
 
 ~~~~~
-  0327:39 20            pushi 20 // $20 state
-  0329:78               push1 
-  032a:39 04            pushi 4 // $4 x
-  032c:39 73            pushi 73 // $73 seconds
-  032e:78               push1 
-  032f:76               push0 
-  0330:39 72            pushi 72 // $72 cycles
-  0332:78               push1 
-  0333:76               push0 
-  0334:72 04c7          lofsa $07fe // identify
-  0337:4a 12             send 12 
+  0327:39 20       pushi 20 // $20 state
+  0329:78          push1 
+  032a:39 04       pushi 4 // $4 x
+  032c:39 73       pushi 73 // $73 seconds
+  032e:78          push1 
+  032f:76          push0 
+  0330:39 72       pushi 72 // $72 cycles
+  0332:78          push1 
+  0333:76          push0 
+  0334:72 04c7     lofsa $07fe // identify
+  0337:4a 12       send 12 
 
-  0339:39 79            pushi 79 // $79 cue
-  033b:76               push0 
-  033c:54 04             self 4 
+  0339:39 79       pushi 79 // $79 cue
+  033b:76          push0 
+  033c:54 04       self 4 
 ~~~~~
 
 So, I put that code into the failure function (modified slightly to fit
 in the space I have)... 
 
-![hex editor screenshot](/assets/2020/01-hex-edit-script-414-pt3.jpg)
+![hex editor screenshot](/assets/2020/01/hex-edit-script-414-pt3.jpg)
 
 ... and the program crashes
 now.  I was concerned about sending messages from outside the object, and
@@ -323,18 +328,18 @@ always right.  Let's revisit the mouse-click code:
 
 ~~~~~
 (evMOUSEBUTTON
-	(= local104 1)
-	(= local102 1)
-	(if
-		(==
-			(= local4 (localproc_0150 (pEvent x?) (pEvent y?)))
-			[local53 (+ (* local1 6) local0)]
-		)
-		(self cue:)
-	else
-		(localproc_01bf)
-	)
-	(pEvent claimed: 1)
+  (= local104 1)
+  (= local102 1)
+  (if
+    (==
+      (= local4 (localproc_0150 (pEvent x?) (pEvent y?)))
+      [local53 (+ (* local1 6) local0)]
+    )
+    (self cue:)
+  else
+    (localproc_01bf)
+  )
+  (pEvent claimed: 1)
 )
 ~~~~~
 
@@ -342,25 +347,27 @@ Can we just call `self #cue` either way?  Here's the disassembly where the
 two calls are.  Luckily, they are both 5 bytes:
 
 ~~~~~
-  03a9:39 79            pushi 79 // $79 cue
-  03ab:76               push0 
-  03ac:54 04             self 4 
+  03a9:39 79       pushi 79 // $79 cue
+  03ab:76          push0 
+  03ac:54 04       self 4 
 
-  03ae:32 0005            jmp code_03b6 
+  03ae:32 0005     jmp code_03b6 
 
         code_03b1
-  03b1:76               push0 
-  03b2:40 fe09 00        call proc_01bf 0 
+  03b1:76          push0 
+  03b2:40 fe09 00  call proc_01bf 0 
 ~~~~~
 
 So, let's change them so that `#cue` is called on both branches...
 That's three identical changes for keyboard, joystick, and mouse actions:
 
-![hex editor screenshot](/assets/2020/01-hex-edit-script-414-pt4.jpg)
+![hex editor screenshot](/assets/2020/01/hex-edit-script-414-pt4.jpg)
 
 ... and it works perfectly!  Now, no matter which answer I pick, the
 game thinks I'm correct.  And, as a bonus, I only have to alter the
 script specific to copy-protection, making me somewhat sure I did not
 screw up the rest of the game.
 
+Here's the patch file (just place it in the game directory as `script.414` 
+and restart the game):  [script.414](/assets/2020/01/script.414).
 
