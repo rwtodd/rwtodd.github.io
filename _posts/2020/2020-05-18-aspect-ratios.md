@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Scaling Options for EGA 320x200"
-date: 2020-05-12 15:23
-categories: games agi sci
+date: 2020-05-18 00:00
+categories: games scummvm graphics
 ---
 
 ## The Problem
