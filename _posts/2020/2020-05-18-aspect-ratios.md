@@ -110,7 +110,8 @@ could be argued that it's an improvement, I'm after the blocky retro feel.
 
 So, the least-intrusive distortion I can think of is occasional row doubling.  Let's take
 an example:   If I scale up times 3 to 960x600, then after aspect ratio correction I still
-have 960 pixels across, but I need to fill vertical pixels. That means, *somehow* I have to add 120 pixels to the height of the image.  The easiest way I can think to do that is
+have 960 pixels across, but I need to fill 720 vertical pixels. That means, *somehow* I
+have to add 120 pixels to the height of the image.  The easiest way I can think to do that is
 by doubling up 120 rows at even intervals throughout the scene.
 
 The higher the resolution, the less noticeable the doubled lines are.
@@ -123,7 +124,8 @@ scaled-up image:
   - At 1280x800 -> 1280x960, 160 lines doubled (20%)
  
 You might initially think that doubling 20% of the lines would make the same amount of
-visual distortion in the outcome, but it's not so.  The difference is how irregular the doubling is in relation to the original pixels.
+visual distortion in the outcome, but it's not so.  The difference is how irregular the doubling
+is in relation to the original pixels.
  
   - At 320x240, there's no scaling, so input pixels come out 1 row high.  Doubling every
    fifth row means the output pixels have the following repeating pattern for their heights:
