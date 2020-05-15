@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Heron's SQRT"
-date: 2018-07-23 21:00
-categories: lisp 
+categories: [ musings ] 
 ---
 
 While doing other things I had a [lecture by Sussman][1] playing on Youtube,

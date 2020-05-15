@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Logic Tables"
-date: 2017-12-27 21:00
-categories: lisp logic
+categories: [ musings ]
 ---
 I've been reading some logic, and thought it might be
 fun to auto-generate some truth tables.

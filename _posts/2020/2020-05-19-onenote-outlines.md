@@ -1,13 +1,12 @@
 ---
 layout: post
 title: "OneNote UWP Outline Options"
-date: 2020-05-18 00:00
-categories: outlines onenote
+categories: [ software ]
 ---
 
 It's occasionally very frustrating when new versions of tools don't offer the
 same capabilities as their predecessors.  Today, I give you the ordered-list
-options in *OneNote2016* vs *OneNote UWP*:
+options in *OneNote 2016* vs *OneNote UWP*:
 
 ![one note screenshots](/assets/2020/08/onenote-outlining-options.png)
 
@@ -23,7 +22,7 @@ into that type of list.
 ![example list screenshot](/assets/2020/08/example-list.png)
 
 I guess that's better than nothing, but *features should be discoverable*! I'm glad
-Microsoft has decided to keep working on *OneNote2016* after all.  They need to drop
+Microsoft has decided to keep working on *OneNote 2016* after all.  They need to drop
 the toy platform and focus on what worked.  The PC didn't change when mobile hit--right or wrong--
 so it doesn't need a dumbed-down mobile interface.  Most power users still spend a lot of time in a
 TTY emulator, and they like it that way.  Let's just refine what was there.  At the end of the

@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Powershell Code-Page Experiments"
-date: 2018-10-12 21:00
-categories: windows console
+categories: [ windows ]
 ---
 
 ## Overview

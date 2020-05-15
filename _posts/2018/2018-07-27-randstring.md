@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Strings in Encrypted Data"
-date: 2018-07-27  14:00
-categories: scala math
+categories: [ musings ] 
 ---
 
 (This is just a random musing, performed at a `scala` REPL)

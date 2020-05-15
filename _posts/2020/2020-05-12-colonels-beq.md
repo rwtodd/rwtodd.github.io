@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Simplifying \"The Colonel's Bequest\"'s Copy Protection"
-date: 2020-05-12 15:23
-categories: games sci hacking
+categories: [games hacking]
+tags: [ sci-game-patching ]
 ---
 
 *The Colonel's Bequest* is one of my favorite old Sierra games. However,

@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Decoding $Recycle.Bin"
-date: 2018-05-10 21:00
-categories: perl windows
+categories: [ windows ]
 ---
 
 I got a call today that someone on a Windows 7 machine

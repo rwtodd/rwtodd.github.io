@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Scala Random Sentences"
-date: 2018-05-21 14:00
-categories: python scala
+categories: [ musings ]
 ---
 
 I ran across Peter Norvig's page [comparing lisp and python][1],
