@@ -136,11 +136,12 @@ is in relation to the original pixels.
   - At 960x720, each input pixel is 3 rows high.  This yields the
   pattern: [3 4 3 4 4].  So at the 3x scale, the larger pixels 
   only grow by a factor of 1.3, and are spread pretty evenly through the pattern.
-  - At 4x 1280x960, the distortion would be barely noticeable: [4px 5px 5px 5px 5px]
+  - At 4x 1280x960, the distortion would be barely noticeable: [4 5 5 5 5].
 
 It looks to me like the doubling I'm describing is exactly what `ScummVM` does for
-aspect ratio correction.  That's good, not only because it makes my thought-experiment
-relevant, but also because I can show you a picture.
+aspect ratio correction.  They might technically be doing nearest-neighbor interpolation,
+but for this case the outcome is the same.  That's good, not only because it makes my thought-experiment
+relevant, but also because I can easily show you a picture.
 
 Here's a side-by-side comparison of a basic checkerboard dither for both 1x and 3x, as
 rendered by `ScummVM`.  I've labeled the height patterns so you can see they match

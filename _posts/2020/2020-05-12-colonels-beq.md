@@ -5,7 +5,7 @@ date: 2020-05-12 15:23
 categories: games sci hacking
 ---
 
-_The Colonel's Bequest_ is one of my favorite old Sierra games. However,
+*The Colonel's Bequest* is one of my favorite old Sierra games. However,
 it can be annoying looking up the fingerprint just to get the game
 started.  So, I wanted to patch my legal copy of the game to make the
 check easier.
@@ -208,7 +208,7 @@ If I change the wrong answer into a NO-OP of some kind, I bet I can just
 click fingerprints until I hit the right one!
 
 Since I don't see a `#cue` method, I'm guessing it's in the base class,
-and __maybe__ that's why I can't see how to get to the happy `#changeState`
+and **maybe** that's why I can't see how to get to the happy `#changeState`
 method.  So, let's attack `localproc_01bf` and hope for the best.
 
 Recall, I want to make it a no-op.  Here's the dissassemly for the procedure:
