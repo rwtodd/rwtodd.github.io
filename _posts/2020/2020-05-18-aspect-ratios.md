@@ -202,3 +202,14 @@ With a significantly higher-resolution monitor, my ideal settings would be:
   - Stretch-Mode: Fit to Window (4:3)
   - Do **not** select the box for Aspect-Ratio Correction
   
+### Appendix: DOSBox
+
+After reading [this blog post on joshmccarty.com](https://joshmccarty.com/optimize-dosbox-for-modern-screens/),
+I found the equivalent settings for DOSBox:
+
+  - surface: ddraw
+  - aspect: true
+  - scaler: normal3x
+  - fullresolution: 1366x768
+
+... so that's what I use there, now.
