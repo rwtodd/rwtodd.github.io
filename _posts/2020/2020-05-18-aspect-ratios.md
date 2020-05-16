@@ -105,15 +105,14 @@ same amount.
 ## Stretching by Row-Doubling
 
 So, for my current screen, the best option available has to be some kind of 
-internal distortion of the image as it is scaled.  The `ScummVM` filters (2xSAI, 
-AdvMAME2x, etc) really change the look of the game (*especially* text). While it 
-could be argued that it's an improvement, I'm after the blocky retro feel.
+internal distortion of the image as it is scaled.  The least-intrusive distortion I
+can think of is occasional row doubling--in other words, leaving the width alone and
+performing a nearest-neighbor interpolation on a stretched height.
 
-So, the least-intrusive distortion I can think of is occasional row doubling.  Let's take
-an example:   If I scale up times 3 to 960x600, then after aspect ratio correction I still
-have 960 pixels across, but I need to fill 720 vertical pixels. That means, *somehow* I
-have to add 120 pixels to the height of the image.  The easiest way I can think to do that is
-by doubling up 120 rows at even intervals throughout the scene.
+Let's take an example:   If I scale up times 3 to 960x600, then after aspect ratio
+correction I still have 960 pixels across, but I need to fill 720 vertical pixels. That
+means, *somehow* I have to add 120 pixels to the height of the image.  The easiest
+way I can think to do that is by doubling up 120 rows at even intervals throughout the scene.
 
 The higher the resolution, the less noticeable the doubled lines are.
 To see why, first notice that--no matter what--you'll be doubling every 5th row in the
@@ -139,9 +138,9 @@ is in relation to the original pixels.
 
 The "height pattern" is the height of each pixel after scaling, which falls into a repeating pattern at every scale.  You can see that, as the resolution increases, the pixel heights get more regular and vary by a smaller amounts. 
 
-A picture might make the above explanation clearer.  Fortunately, it looks like the doubling I'm describing is exactly what `ScummVM` does for
-aspect ratio correction.  They might technically be doing nearest-neighbor interpolation,
-but for this case the outcome is the same.
+A picture might make the above explanation clearer.  Fortunately, it looks like the 
+nearest-neighbor/doubling approach I'm describing is exactly what `ScummVM` does for
+aspect ratio correction:
 
 ![checkerboard comparison screenshot](/assets/2020/07/dither-compare-1x-to-3x.png)
 
