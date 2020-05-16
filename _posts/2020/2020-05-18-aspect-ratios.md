@@ -55,13 +55,15 @@ The picture will be vertically too small.  So, what is the correct resolution?
 Well, if we only care about the image having the right shape, then any multiple of 4:3 will
 do.  So, examples would be:
 
-  - 320x240   ;; 4:3 * 80
-  - 400x300   ;; 4:3 * 100
-  - 480x360   ;; 4:3 * 120
-  - 640x480   ;; 4:3 * 160
-  - 800x600   ;; 4:3 * 200
-  - 1600x1200 ;; 4:3 * 400
-
+  | Scale Factor | Resolution |
+  | ------------ | ---------- |
+  | 4:3 * 80     | 320x240    |
+  | 4:3 * 100    | 400x300    |
+  | 4:3 * 120    | 480x360    |
+  | 4:3 * 160    | 640x480    |
+  | 4:3 * 200    | 800x600    |
+  | 4:3 * 400    | 1600x1200  |
+  
 ## Exact Integer-Multiple Scaling
 
 Getting the right shape is the easy part.  The *hard* part, is getting the right shape *and*
@@ -117,37 +119,34 @@ The higher the resolution, the less noticeable the doubled lines are.
 To see why, first notice that--no matter what--you'll be doubling every 5th row in the
 scaled-up image:
 
-  - At 320x200 -> 320x240, 40 lines doubled (20%)
-  - At 640x400 -> 640x480, 80 lines doubled (20%)
-  - At 960x600 -> 960x720, 120 lines doubled (20%)
-  - At 1280x800 -> 1280x960, 160 lines doubled (20%)
+  | Scale | Resolution | 4:3 Corrected | Doubled Lines |
+  |-------|------------|---------------|--------------|
+  |1x |320x200 | 320x240| 40 (20%) |
+  |2x |640x400  |640x480 | 80 (20%) |
+  |3x |960x600  | 960x720| 120 (20%)|
+  |4x |1280x800 | 1280x960 | 160 (20%)|
  
 You might initially think that doubling 20% of the lines would make the same amount of
 visual distortion in the outcome, but it's not so.  The difference is how irregular the doubling
 is in relation to the original pixels.
  
-  - At 320x240, there's no scaling, so input pixels come out 1 row high.  Doubling every
-   fifth row means the output pixels have the following repeating pattern for their heights:
-  [1 1 1 1 2].  The occasional double-size row can be jarring.
-  - At 640x480, each input pixel is 2 rows high.  Now the repeating output pattern is:
-  [2 2 3 2 3]  This is already much more regular, and also pixels with doubled rows are
-  only 1.5-times as large as normal pixels. 
-  - At 960x720, each input pixel is 3 rows high.  This yields the
-  pattern: [3 4 3 4 4].  So at the 3x scale, the larger pixels 
-  only grow by a factor of 1.3, and are spread pretty evenly through the pattern.
-  - At 4x 1280x960, the distortion would be barely noticeable: [4 5 5 5 5].
+  | Scale | Output Height Pattern | Normalized | Std. Deviation |
+  |------ |-----------------------|------------|---------|
+  | 1x | [1 1 1 1 2] | [1.0 1.0 1.0 1.0 2.0] | 0.40 |
+  | 2x | [2 2 3 2 3] | [1.0 1.0 1.5 1.0 1.5] | 0.24 |
+  | 3x | [3 4 3 4 4] | [1.0 1.3 1.0 1.3 1.3] | 0.16 |
+  | 4x | [4 5 5 5 5] | [1.0 1.2 1.2 1.2 1.2] | 0.10 |
 
-It looks to me like the doubling I'm describing is exactly what `ScummVM` does for
+The "height pattern" is the height of each pixel after scaling, which falls into a repeating pattern at every scale.  You can see that, as the resolution increases, the pixel heights get more regular and vary by a smaller amounts. 
+
+A picture might make the above explanation clearer.  Fortunately, it looks like the doubling I'm describing is exactly what `ScummVM` does for
 aspect ratio correction.  They might technically be doing nearest-neighbor interpolation,
-but for this case the outcome is the same.  That's good, not only because it makes my thought-experiment
-relevant, but also because I can easily show you a picture.
-
-Here's a side-by-side comparison of a basic checkerboard dither for both 1x and 3x, as
-rendered by `ScummVM`.  I've labeled the height patterns so you can see they match
-what I was describing above.  At 3x, the checkerboard is much more even overall; the
-distortions are spread out more evenly.
+but for this case the outcome is the same.
 
 ![checkerboard comparison screenshot](/assets/2020/07/dither-compare-1x-to-3x.png)
+
+Above is a side-by-side comparison of a basic checkerboard dither for both 1x and 3x, as
+rendered by `ScummVM`.  I've labeled the height patterns so you can see they match the table.  At 3x, the checkerboard is much more even overall; the distortions are spread out more evenly.
 
 So, on my current 1366x768 screen, I can do 3x scaling, and the only time I really 
 notice an issue is with multi-line text. Usually one line of text will look **bolder** 
@@ -164,14 +163,15 @@ let's revisit that.
 A 4k monitor is 3840x2160.  So, we can just barely fit a multiple of 9 on our
 original 320x200 image:
 
-  - At 2880x1800 -> 2880x2160, 360 lines are doubled (20%)
-  - At 9x, each source pixel is 9 rows tall, and we will additionally 
-  double every 5th row.
-  - This leads to the repeating pixel-height pattern: [10 11 11 11 11]
-  - The larger pixels are only 1.1-times taller than the small pixel.
+  | Scale | Resolution | 4:3 Corrected | Doubled Lines |
+  |-------|------------|---------------|--------------|
+  |9x |2880x1800 | 2880x2160 | 360 (20%) |
 
-To me, this makes line-doubling at the highest available resolution the best overall
-strategy.
+  | Scale | Output Height Pattern | Normalized | Std. Deviation |
+  |------ |-----------------------|------------|---------|
+  | 9x | [10 11 11 11 11] | [1.0 1.1 1.1 1.1 1.1] | 0.04 |
+
+To me, this makes line-doubling at the highest available resolution the best overall strategy.
 
 ## What about Doubling in Both Directions?
 
