@@ -26,11 +26,11 @@ they added the lower case version.
 That's a perfect example of how a design gets less coherent as small
 decisions accrete over time.
 
-## A Tangent  ##
+## An Extended Tangent  ##
 
-Thinking about the sequence of events as formatting options
-accumulated made me curious about when `date` got formatting options
-in the first place.  Here are the ones I checked:
+Thinking about the sequence of events made me curious about when
+`date` got formatting options in the first place.  I started looking
+through historical source archives.  Here are the ones I checked:
 
 | Version                 | Date | Formatting?       |
 |-------------------------|------|-------------------|
@@ -81,14 +81,14 @@ for `%H:%M:%S`, and `%%` as a way to produce a percent-sign.
 ### PDP11v ###
 
 I don't have much information on this Unix, but it appears to be a
-pretty early one, and I noted it *does* have formatting code similar
-to System III.
+pretty early one.  I noted its formatting code is similar to System
+III, so I'm guessing that's the origin, but I don't know for certain.
 
 ### SunOS ###
 
 I don't see the source for SunOS 2.0 anywhere, but 
 in the [tapes for SunOS 2.0][13] (1985), there's nothing in
-the man page about formatting:
+the man page about formatting.  Here's the top of the man page:
 
 ``` troff
 \" @(#)date.1 1.2 85/04/04 SMI; from UCB 4.1
@@ -107,7 +107,7 @@ date \- display or set the date
 .LP
 ```
 
-**However**, the binary [tapes for SunOS 3.2][14] (1986) give us:
+**However**, in the binary [tapes for SunOS 3.2][14] (1986), we can see the `date` binary itself, with embedded strings:
 
 ```
 @(#)date.c 1.2 86/08/25 SMI
@@ -118,7 +118,7 @@ usage: date [-u] [+format] [yymmddhhmm[.ss]] [-a sss.fff]
 ```
 
 ... and elsewhere in the tapes I found the manual source which clearly
-sites System V:
+cites System V:
 
 ``` troff
 TH DATE 1V "16 July 1983"
@@ -191,9 +191,11 @@ static	char *usage = "usage: date [-n] [-u] [yymmddhhmm[.ss]]\n";
 #endif UW
 ```
 
-This code bears a strong resemblance all the way back to
-[the PWB 1.0 code][8], so I assume it was copied from somewhere
-(likely SunOS, since the UWisc distribution also pulled in NFS).
+This code bears a strong resemblance--note the `#define`s for `HOUR`
+and friends--all the way back to [the PWB 1.0 code][8], so I assume it
+was copied from somewhere and not original.  From what little I know,
+I bet the code came from SunOS, since the UWisc distribution also
+pulled in NFS.
 
 The flags are somewhat expanded from the other sets I've seen.  I
 especially like the `%R` option to give the month as a roman numeral!
