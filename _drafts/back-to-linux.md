@@ -4,13 +4,25 @@ title: "Back to Linux"
 categories: [ computing ]
 ---
 
-# My History
+## The Past  ##
 
-# Fedora
+...discuss...
 
-## VirtualBox
 
-## Dual-Booting
+## My Plan ##
 
-# Choices!
+I thought I'd progress carefully, making sure I *really* wanted to do this.
+The plan was:
 
+- Run linux in a virtual machine for a while
+- Swap 
+
+
+## Reality ##
+
+
+
+
+<!-- Local Variables: -->
+<!-- fill-column: 77 -->
+<!-- End: -->
