@@ -22,7 +22,7 @@ until sleep takes over.
 
 ## Journal ##
 
-### Day 1 ###
+### Jun 10 (Day 1) ###
 
 I had gone to bed around 3AM, and did not fall asleep immediately, so waking
 at 7AM was pretty jarring.  Surely this will be the hardest day.  On top of
@@ -33,11 +33,24 @@ When I was supposed to be going to sleep, around 11PM, I started to feel more
 alert.  I went to bed anyway at about 11:19PM, and was asleep probably within
 an hour or so.  I set the alarm for 7:30 to be nice to myself.
 
-### Day 2 ###
+### Jun 11-12 (Day 2-3) ###
 
 I actually woke up at 6, which may be a result of my body not expecting too
 much sleep?  I'm not sure.  But, I stayed in bed until my alarm at 7:30.  I
-felt ok in the morning.
+felt ok in the morning, got tired around noon, and recovered.
+
+The next day was pretty much the same.
+
+### Jun 13 (Day 4) ###
+
+Last night, I worked until 11PM, and did not get home until 11:30PM.  Once
+home, I had a few things to do, so I didn't even try to sleep until 12:15.
+So, to be nice to myself, I set my alarm for 8:15AM.  Sleep was ok, if not
+immediate.  I'm dragging this morning, though.
+
+I enjoy having the morning hours to work, although I used to enjoy having the
+evening hours to work.  I don't think there's much of a difference, there.
+
 
 [1]: https://www.quantamagazine.org/why-sleep-deprivation-kills-20200604/?utm_source=pocket-newtab
 [2]: https://archive.org/details/JustForFun
