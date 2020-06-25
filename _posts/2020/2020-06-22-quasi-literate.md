@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Quasi-Literate Programming"
+title: "Semi-Literate Programming"
 categories: [ computing ]
 ---
 
@@ -107,7 +107,7 @@ bool myfunc(void) {
   char *buffer = malloc(...);
   bool result = false;
   if(buffer != NULL) {
-     @<open the file and parse it@>
+     @.(open the file and parse it)
      free(buffer);
   } else {
      fputs(...);
@@ -115,23 +115,23 @@ bool myfunc(void) {
   return result;
 }
 
-@<open the file and parse it@>=
+@./open the file and parse it/
 int fd = open(...);
 if(fd >= 0) {
-   @<parse the file@>
+   @.(parse the file)
    close(fd);
 } else {
    perror(...);
 }
 
-@<parse the file@>=
+@./parse the file/
 if(do_stuff(fd)) {
-   @<do calculations on the parse@>
+   @.(do calculations on the parse)
 } else {
    fputs(...);
 }
 
-@<do calculations on the parse@>=
+@./do calculations on the parse/
 if(do_more_stuff(fd)) {
    result = true;  /* everything succeeded! */
 } else {
@@ -151,7 +151,7 @@ The downside here is that the last example isn't valid C code, and you need a
 simple preprocessor to re-create the nested version for the compiler.  In
 literate programming lore, this is called "*tangling*" the source.
 
-I may give this a try: call it "quasi-literate programming," where I forget
+I may give this a try: call it "semi-literate programming," where I forget
 about trying to make a typeset paper out of the code, and just use the
 tangling process to enable more flexible notation of the code. 
 
