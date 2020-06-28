@@ -1,0 +1,200 @@
+diff -ur perl1/Makefile.SH bp/Makefile.SH
+--- perl1/Makefile.SH	2020-06-27 16:16:09.610583812 -0500
++++ bp/Makefile.SH	2020-06-27 19:47:09.215009489 -0500
+@@ -47,7 +47,7 @@
+ lib = $lib
+ mansrc = $mansrc
+ manext = $manext
+-CFLAGS = $ccflags -O
++CFLAGS = $ccflags -O -Wno-implicit-function-declaration
+ LDFLAGS = $ldflags
+ SMALL = $small
+ LARGE = $large $split
+@@ -55,7 +55,7 @@
+ mallocobj = $mallocobj
+ SLN = $sln
+ 
+-libs = $libnm -lm
++libs = $libnm -lm -lcrypt
+ !GROK!THIS!
+ 
+ cat >>Makefile <<'!NO!SUBS!'
+@@ -103,8 +103,8 @@
+ 
+ perl.c: perl.y
+ 	@ echo Expect 2 shift/reduce errors...
+-	yacc perl.y
+-	mv y.tab.c perl.c
++	bison perl.y
++	mv perl.tab.c perl.c
+ 
+ perl.o: perl.c perly.c perl.h EXTERN.h search.h util.h INTERN.h handy.h
+ 	$(CC) -c $(CFLAGS) $(LARGE) perl.c
+diff -ur perl1/perl.h bp/perl.h
+--- perl1/perl.h	2020-06-27 16:16:09.660583709 -0500
++++ bp/perl.h	2020-06-27 19:07:52.999695681 -0500
+@@ -61,11 +61,6 @@
+ #include "array.h"
+ #include "hash.h"
+ 
+-#ifdef CHARSPRINTF
+-    char *sprintf();
+-#else
+-    int sprintf();
+-#endif
+ 
+ /* A string is TRUE if not "" or "0". */
+ #define True(val) (tmps = (val), (*tmps && !(*tmps == '0' && !tmps[1])))
+diff -ur perl1/perl.y bp/perl.y
+--- perl1/perl.y	2020-06-27 16:16:09.662583705 -0500
++++ bp/perl.y	2020-06-27 19:43:16.097716192 -0500
+@@ -16,6 +16,15 @@
+ #include "util.h"
+ #include "INTERN.h"
+ #include "perl.h"
++ARG * cval_to_arg(char *cval);
++ARG *listish(ARG *);
++ARG * make_op(int type,int newlen,ARG*arg1,ARG*arg2,ARG*arg3,int dolist);
++ARG * l(ARG *arg);
++ARG * cmd_to_arg(CMD *cmd);
++ARG * make_list(ARG *arg);
++ARG * hide_ary(ARG *arg);
++ARG * mod_match(int type,ARG *left, ARG *pat);
++ARG * addflags(int i,int flags,ARG *arg);
+ char *tokename[] = {
+ "256",
+ "word",
+@@ -69,7 +78,7 @@
+ %token <arg> RSTRING TRANS
+ 
+ %type <ival> prog decl format
+-%type <stabval>
++/* %type <stabval> */
+ %type <cmdval> block lineseq line loop cond sideff nexpr else
+ %type <arg> expr sexpr term
+ %type <arg> condmod loopmod cexpr
+diff -ur perl1/perly.c bp/perly.c
+--- perl1/perly.c	2020-06-27 16:16:09.663583703 -0500
++++ bp/perly.c	2020-06-27 19:32:25.865805495 -0500
+@@ -15,6 +15,7 @@
+  * 
+  */
+ 
++#include<string.h>
+ bool preprocess = FALSE;
+ bool assume_n = FALSE;
+ bool assume_p = FALSE;
+diff -ur perl1/search.c bp/search.c
+--- perl1/search.c	2020-06-27 16:16:09.663583703 -0500
++++ bp/search.c	2020-06-27 19:20:13.307102994 -0500
+@@ -24,7 +24,7 @@
+ 
+ #define VERBOSE
+ #define FLUSH
+-#define MEM_SIZE int
++#define MEM_SIZE size_t 
+ 
+ #ifndef BITSPERBYTE
+ #define BITSPERBYTE 8
+diff -ur perl1/stab.c bp/stab.c
+--- perl1/stab.c	2020-06-27 16:16:09.663583703 -0500
++++ bp/stab.c	2020-06-27 19:45:09.025373845 -0500
+@@ -13,6 +13,7 @@
+  */
+ 
+ #include <signal.h>
++#include <errno.h>
+ #include "handy.h"
+ #include "EXTERN.h"
+ #include "search.h"
+@@ -67,7 +68,7 @@
+     ,0
+     };
+ 
+-extern int errno;
++/* extern int errno; */
+ 
+ STR *
+ stab_str(stab)
+@@ -244,7 +245,7 @@
+ 	}
+     }
+     else if (stab == envstab && envname) {
+-	setenv(envname,str_get(str));
++	perl_setenv(envname,str_get(str));
+ 				/* And you'll never guess what the dog had */
+ 	safefree(envname);	/*   in its mouth... */
+ 	envname = Nullch;
+diff -ur perl1/util.c bp/util.c
+--- perl1/util.c	2020-06-27 16:16:09.675583678 -0500
++++ bp/util.c	2020-06-27 19:19:56.181159251 -0500
+@@ -10,7 +10,7 @@
+  */
+ 
+ #include <stdio.h>
+-
++#include <stdlib.h>
+ #include "handy.h"
+ #include "EXTERN.h"
+ #include "search.h"
+@@ -32,7 +32,6 @@
+ MEM_SIZE size;
+ {
+     char *ptr;
+-    char *malloc();
+ 
+     ptr = malloc(size?size:1);	/* malloc(0) is NASTY on our system */
+ #ifdef DEBUGGING
+@@ -56,7 +55,6 @@
+ MEM_SIZE size;
+ {
+     char *ptr;
+-    char *realloc();
+ 
+     ptr = realloc(where,size?size:1);	/* realloc(0) is NASTY on our system */
+ #ifdef DEBUGGING
+@@ -75,7 +73,7 @@
+ }
+ 
+ /* safe version of free */
+-
++void
+ safefree(where)
+ char *where;
+ {
+@@ -223,7 +221,7 @@
+ extern char **environ;
+ 
+ void
+-setenv(nam,val)
++perl_setenv(nam,val)
+ char *nam, *val;
+ {
+     register int i=envix(nam);		/* where does it go? */
+diff -ur perl1/util.h bp/util.h
+--- perl1/util.h	2020-06-27 16:16:09.675583678 -0500
++++ bp/util.h	2020-06-27 19:16:37.113828082 -0500
+@@ -28,7 +28,7 @@
+ char	*get_a_line();
+ char	*savestr();
+ int	makedir();
+-void	setenv();
++void	perl_setenv();
+ int	envix();
+ void	notincl();
+ char	*getval();
+diff -ur perl1/version.c bp/version.c
+--- perl1/version.c	2020-06-27 16:16:09.675583678 -0500
++++ bp/version.c	2020-06-27 19:21:12.490908579 -0500
+@@ -7,9 +7,10 @@
+  */
+ 
+ #include "patchlevel.h"
+-
++#include<stdio.h>
+ /* Print out the version number. */
+ 
++void
+ version()
+ {
+     extern char rcsid[];
