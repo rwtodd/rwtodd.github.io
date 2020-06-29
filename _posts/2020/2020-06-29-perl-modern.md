@@ -33,6 +33,9 @@ that Perl 5.30 runs almost all of the Perl 1 unit tests successfully.  It's
 kind of sad that Perl 7 is likely to run none of them unmodified.  Zero
 percent.
 
+I have made [a post on perlmonks][4], to collect some wisdom on the topic.
+
 [1]: https://www.perl.com/pub/1999/03/pm.html/
 [2]: https://www.youtube.com/watch?v=sTEshbh2lYQ&t=8s
 [3]: https://www.nntp.perl.org/group/perl.perl5.porters/2020/06/msg257565.html
+[4]: https://perlmonks.org/?node_id=11118665
