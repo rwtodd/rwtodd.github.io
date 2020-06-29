@@ -6,13 +6,13 @@ categories: [ computing ]
 
 I've been enjoying Perl lately, but I've never looked at the implementation
 before.  It was a pleasant surprise to see that the [github repo][1] has a
-pretty complete history, all the way to perl 1.  In no time, I found myself
+pretty complete history, all the way to Perl 1.  In no time, I found myself
 wondering:
 
-> Can I build perl 1 today?
+> Can I build Perl 1 today?
 
-I checked out a worktree of perl 1, patch 14.  This was the last revision in
-the perl 1 series available, and it is dated Feb 1, 1988.  Let's see if I can
+I checked out a worktree of Perl 1, patch 14.  This was the last revision in
+the Perl 1 series available, and it is dated Feb 1, 1988.  Let's see if I can
 build it with gcc 10 on Fedora 32.
 
 ``` bash
@@ -53,7 +53,7 @@ The make went very smoothly, all things considered.  Almost all the issues I
 needed to correct were due to incomplete function prototypes and a few
 overlaps between provided functions and standard functions.  I also needed
 to adjust the LDFLAGS to link to libcrypt.  Soon enough, I had a working
-perl.
+Perl.
 
 I'll include the patch between my version and the git source at the bottom of
 this post.  The entire unified diff is only about 200 lines long.
@@ -62,13 +62,13 @@ The distribution has a set of tests in a "t" directory, and nearly all of
 them pass.  One bug this binary has, in particular, is that you can't run
 a one liner... using the "-e" argument leads to a segmentation fault.  Since
 it runs scripts ok, I did not try to track that issue down.  It's not going
-to be the perl I use day-to-day, after all!
+to be the Perl I use day-to-day, after all!
 
 ## The Perl 1 Language ##
 
 This is what I was most interested to understand: 
-*is perl version 1 anything like the perl I know?*  Looking at the test
-scripts, the distinctive flavor of perl is decidedly there.
+*is Perl version 1 anything like the Perl I know?*  Looking at the test
+scripts, the distinctive flavor of Perl is decidedly there.
 
 - Sigils? check.
 - Lists and hashes? check.
@@ -83,34 +83,34 @@ scripts, the distinctive flavor of perl is decidedly there.
 - Topic variables $\_ and @\_? absolutely.
 - Subs without signatures, shifting arguments from @\_?  yes.
 
-Let me cut to the chase: the test suite looks so much like perl that most of
-the tests pass when I run **perl 5.30** on them!  Here are the main
+Let me cut to the chase: the test suite looks so much like Perl that most of
+the tests pass when I run **Perl 5.30** on them!  Here are the main
 differences I noticed:
 
 - You seem to need more parens to make the parser happy than you need in a
-  current perl.  Example:  `$j = join ':', (1,2,3,4);` does not work in perl
+  current Perl.  Example:  `$j = join ':', (1,2,3,4);` does not work in Perl
   1; you need to put parens around the arguments to "join."
 - There don't seem to be any auto-quoting barewords.  So use `$h{'name'}`, not `$h{name}`.
-- I expected to need to call subs with `&mysub();`, but in perl 1 the
+- I expected to need to call subs with `&mysub();`, but in Perl 1 the
   incantation is actually `do mysub();`.  That's the main thing that causes
-  perl 5 to fail when running the test suite.
+  Perl 5 to fail when running the test suite.
 
 ... and obviously no lexical variables or modules, etc.  There are things
-missing, clearly, but nearly everything in perl 1 made it to perl 5
+missing, clearly, but nearly everything in Perl 1 made it to Perl 5
 unchanged.  
 
 ## No Need to Continue ##
 
-I had initially planned to get perl 2 and 3 to compile as well, and chart the
-progression toward familiar perl.  I don't need to: the first perl is so
-*perly* that it would be a waste of time.  I really didn't expect that.
+I had initially planned to get Perl 2 and 3 to compile as well, and chart the
+progression toward familiar Perl.  I don't need to: the first Perl is so
+*Perl* that it would be a waste of time.  I really didn't expect that.
 
 ## The Patch ##
 
 If you'd like to build it yourself, maybe this patch will help you:
 [perl1-modern.patch](/assets/2020/10/perl1-modern.patch).  It should apply
 against a checkout of commit a4de7c03d0bdc29d9d3a18abad4ac2628182ed7b in the
-perl5 github repository (perl 1, patch 14).
+perl5 github repository (Perl 1, patch 14).
 
 [1]: https://github.com/Perl/perl5
 
