@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Lua GCs Blocks and Functions"
+title: "Lua Collects Blocks and Functions"
 tags: [ lua ]
 categories: [ computing ]
 ---
@@ -29,4 +29,3 @@ sure I understood:
 3. Global functions defined in loaded blocks are accessible outside the block
    (as long as I don't put a custom environment on the `load` call)
 
-If any of those things weren't true, I'd expect to see memory grow.
