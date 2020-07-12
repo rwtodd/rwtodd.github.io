@@ -5,8 +5,6 @@ categories: [ computing ]
 tags: [ moving-to-emacs ]
 ---
 
-## Issue ##
-
 As I move more of my work to emacs, I find myself comparing my edits
 to the methods I would have used in vim.  Here are a few scenarios.
 
@@ -33,7 +31,7 @@ Note that, to type the `^M` on the first, line, I have to use
 use `\n` when putting the lines back together--another `^M` doesn't
 work.
 
-In emacs, I the closest sequence I could discover was:
+In emacs, the closest sequence I could discover was:
 
 ```
 C-x r <space> a C-<space> C-e C-M-% ; <cr> C-q C-j <cr> !
@@ -58,10 +56,10 @@ use emacs' ability to `narrow` the buffer.  Here's that sequence:
 ```
 C-<space> C-e C-x n n C-a C-M-% ; <cr> C-q C-j <cr> !
 <<edit, then go to the start of the buffer>>
-C-M-% C-q C-j <cr> ; <cr> !
+C-M-% C-q C-j <cr> ; <cr> ! C-x n w
 ```
 
-... which gives only 20 keystrokes.
+... which gives only 23 keystrokes.
 
 ## Ephemeral Bookmarks ##
 
@@ -95,7 +93,7 @@ replacement.  The best option in emacs is:
 M-z .
 ```
 
-... which is 2 keystrokes instead of one (ignoring that this deletes
+... which is 2 keystrokes instead of three (ignoring that this deletes
 the period, making me re-type it).
 
 A variation I often hit is: "I want to edit at the second t on this

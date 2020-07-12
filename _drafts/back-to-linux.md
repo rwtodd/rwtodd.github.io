@@ -33,6 +33,9 @@ qt.qpa.xcb: QXcbConnection: XCB error: 3 (BadWindow), sequence: 961, resource id
 (vlc:3792): Gtk-WARNING **: 14:57:40.495: Failed to measure available space: The specified location is not supported
 ```
 
-<!-- Local Variables: -->
-<!-- fill-column: 77 -->
-<!-- End: -->
+## Random Observations ##
+
+- All the random retro screensavers in *XScreenSaver* have been nice to see
+  on my screen every time I return to it.
+
+vim:tw=77:et:

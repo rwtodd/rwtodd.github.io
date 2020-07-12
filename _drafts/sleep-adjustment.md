@@ -51,6 +51,12 @@ immediate.  I'm dragging this morning, though.
 I enjoy having the morning hours to work, although I used to enjoy having the
 evening hours to work.  I don't think there's much of a difference, there.
 
+### Jun 14 (Day 5) ###
+
+Did not get a full night's sleep, as I went to sleep late, and then was
+startled awake at 6:45AM.  Will try harder to get to bed on time tonight,
+whether I am tired or not.
+
 
 [1]: https://www.quantamagazine.org/why-sleep-deprivation-kills-20200604/?utm_source=pocket-newtab
 [2]: https://archive.org/details/JustForFun
