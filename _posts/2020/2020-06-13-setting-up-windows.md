@@ -1,4 +1,4 @@
----
+--
 layout: post
 title: "Setting Up Windows"
 categories: [ computing ]
@@ -83,8 +83,9 @@ subst J: C:\Users\rwtodd\source\repos
 ## Install Programs ##
 
 During the setup I'm describing here, I downloaded software packages
-manually, but next time I'm considering trying something like
-[Chocolatey](https://chocolatey.org/).  We'll see.
+manually, but since then I've started using
+[Chocolatey](https://chocolatey.org/) for many of the packages.
+I've added annotations below for the chocolatey packages I use now.
 
 ### Edge-Chromium ###
 
@@ -105,12 +106,13 @@ manually, but next time I'm considering trying something like
 
 ### Git ###
 
+- I don't use chocolatey for Git.
 - Download the Git installer from
   [https://git-scm.com/download/win](https://git-scm.com/download/win)
 - When it asks about an editor, point it to vim.
 - Run the global config:
 
-```
+``` bash
 git config --global user.name "Richard Todd"
 git config --global user.email "rwtodd@noreply.users.github.com"
 ```
@@ -119,14 +121,19 @@ git config --global user.email "rwtodd@noreply.users.github.com"
 
 - It looks like OpenSSH is just installed by default on windows these
   days.  If it's not, go to "optional windows features" and add it.
-- Put public and private keys in `%userprofile%\.ssh`.
+- Put public and private keys in `%USERPROFILE%\.ssh`.
   - It's kind of picky about line endings and final newlines, so try it out
     and adjust the key-files as needed.
 
+### Vim ###
+
+- `choco install vim --params "'/NoContextmenu /NoDesktopShortcuts'"`
+- Clone `git@github.com:rwtodd/dot-vim.git` into `%USERPROFILE%\vimfiles`
+- Run `git submodule update --init` to get the embedded packages
+
 ### Emacs ###
 
-- Download the latest emacs, and copy it to `C:\Program Files\Emacs`
-- Add `C:\Program Files\Emacs\bin` to `%PATH%`
+- `choco install emacs`
 - Clone `git@github.com:rwtodd/emacs-dot-d` to `%APPDATA%\.emacs.d`
 - In emacs:
   - `M-x package-refresh-contents`
@@ -139,23 +146,21 @@ Most of the data I care about is either in a backed-up git repository, or on
 my OneDrive. So, all I have left to do is to install the applications I use
 on Windows regularly.  These are:
 
-- [Visual Studio Community Edition](https://visualstudio.microsoft.com/)
-- [Powershell 7](https://github.com/PowerShell/PowerShell/releases),
-  usually via `dotnet tool install --global PowerShell`, since I have dotnet
-  core installed as part of VS.
-- [7-zip](https://www.7-zip.org/)
-- [Foobar2000](https://foobar2000.org)
-- [SumatraPDF](https://www.sumatrapdfreader.org/)
+- [Powershell 7](https://github.com/PowerShell/PowerShell/releases), via chocolatey powershell-core
+- [7-zip](https://www.7-zip.org/) via chocolatey 7zip
+- [Foobar2000](https://foobar2000.org) via chocolatey foobar2000
+- [SumatraPDF](https://www.sumatrapdfreader.org/) via chocolatey sumatraPDF
   - Set it as the default PDF and Epub reader
 - [ScummVM](https://www.scummvm.org/)
   - Set the savegame directory to OneDrive
-- [DosBox](https://www.dosbox.com/)
-- [Mesen NES Emulator](https://mesen.ca/)
-- [ImageMagick](https://imagemagick.org/index.php)
+- [DosBox](https://www.dosbox.com/) via chocolatey dosbox
+- [Mesen NES Emulator](https://mesen.ca/) via website
+- [ImageMagick](https://imagemagick.org/index.php) via website
   64-bit 8-bit DLL version
   - Also get [Ghostscript](https://www.ghostscript.com/) GPL version 
 	for magick.exe PDF support
-- [FileZilla](https://filezilla-project.org/) for FTP
+- [WinSCP](https://winscp.net/eng/index.php) for FTP, via chocolatey winscp
+- [Visual Studio Community Edition](https://visualstudio.microsoft.com/)
 - [MS Office](https://office.com)
 - MS Todo from the Microsoft Store
 
