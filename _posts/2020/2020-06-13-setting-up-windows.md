@@ -1,4 +1,4 @@
---
+---
 layout: post
 title: "Setting Up Windows"
 categories: [ computing ]
@@ -151,6 +151,8 @@ on Windows regularly.  These are:
 - [Foobar2000](https://foobar2000.org) via chocolatey foobar2000
 - [SumatraPDF](https://www.sumatrapdfreader.org/) via chocolatey sumatraPDF
   - Set it as the default PDF and Epub reader
+- [VLC Player](https://www.videolan.org/vlc/) via chocolatey vlc
+- [FFmpeg](https://ffmpeg.org/) via website
 - [ScummVM](https://www.scummvm.org/)
   - Set the savegame directory to OneDrive
 - [DosBox](https://www.dosbox.com/) via chocolatey dosbox
