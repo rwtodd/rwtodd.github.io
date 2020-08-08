@@ -114,7 +114,7 @@ I've added annotations below for the chocolatey packages I use now.
 
 ``` bash
 git config --global user.name "Richard Todd"
-git config --global user.email "rwtodd@noreply.users.github.com"
+git config --global user.email "rwtodd@users.noreply.github.com"
 ```
 
 ### SSH Keys ###
