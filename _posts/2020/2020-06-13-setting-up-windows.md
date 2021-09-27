@@ -2,7 +2,7 @@
 layout: post
 title: "Setting Up Windows"
 categories: [ computing ]
-tags: []
+tags: [ windows ]
 ---
 
 I recently installed Windows from scratch, and thought I

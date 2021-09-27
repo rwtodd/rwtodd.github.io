@@ -2,6 +2,7 @@
 layout: post
 title: "Scala Random Sentences"
 categories: [ musings ]
+tags: [ scala ]
 ---
 
 I ran across Peter Norvig's page [comparing lisp and python][1],

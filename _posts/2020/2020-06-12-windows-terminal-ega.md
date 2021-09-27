@@ -2,6 +2,7 @@
 layout: post
 title: "An EGA Color Scheme Windows Terminal"
 categories: [ computing ]
+tags: [ terminal ]
 ---
 
 I like old-school EGA/VGA terminal colors, and tend to add them to
